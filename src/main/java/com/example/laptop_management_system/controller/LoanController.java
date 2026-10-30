@@ -1,6 +1,7 @@
 package com.example.laptop_management_system.controller;
 
 import com.example.laptop_management_system.domain.Loan;
+import com.example.laptop_management_system.domain.LoanStatus;
 import com.example.laptop_management_system.service.LoanService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,11 @@ public class LoanController {
             return new ResponseEntity<>("The loan with that id does not exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(loan.get(), HttpStatus.OK);
+    }
+
+    @GetMapping("/by-status")
+    public ResponseEntity<List<Loan>> findByStatus(@RequestParam LoanStatus status) {
+        return new ResponseEntity<>(loanService.findByStatus(status), HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")

@@ -1,9 +1,11 @@
 package com.example.laptop_management_system.service;
 
 import com.example.laptop_management_system.domain.Loan;
+import com.example.laptop_management_system.domain.LoanStatus;
 import com.example.laptop_management_system.repository.LoanRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -49,5 +51,13 @@ public class LoanService {
         }
         loanRepository.deleteById(id);
         return "Loan deleted successfully";
+    }
+
+    public List<Loan> findByStatus(LoanStatus status) {
+        return loanRepository.findByStatusOrderByLoanDateAsc(status);
+    }
+
+    public List<Loan> findBetween(LocalDate start, LocalDate end) {
+        return loanRepository.findByLoanDateBetweenOrderByLoanDateAsc(start, end);
     }
 }

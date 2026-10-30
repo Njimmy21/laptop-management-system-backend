@@ -1,11 +1,13 @@
 package com.example.laptop_management_system.controller;
 
 import com.example.laptop_management_system.domain.Custodian;
+import com.example.laptop_management_system.domain.Loan;
 import com.example.laptop_management_system.service.CustodianService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,6 +40,13 @@ public class CustodianController {
             return new ResponseEntity<>("The custodian with that id does not exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(custodian.get(), HttpStatus.OK);
+    }
+
+    @GetMapping("/between")
+    public ResponseEntity<List<Loan>> findBetween(@RequestParam String start, @RequestParam String end) {
+        LocalDate startDate = LocalDate.parse(start);   // "2026-10-01" (text) → LocalDate object
+        LocalDate endDate = LocalDate.parse(end);
+        return new ResponseEntity<>(loanService.findBetween(startDate, endDate), HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")

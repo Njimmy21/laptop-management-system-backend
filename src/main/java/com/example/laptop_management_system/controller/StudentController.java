@@ -40,6 +40,11 @@ public class StudentController {
         return new ResponseEntity<>(student.get(), HttpStatus.OK);
     }
 
+    @GetMapping("/by-faculty")
+    public ResponseEntity<List<Student>> findByFaculty(@RequestParam String faculty) {
+        return new ResponseEntity<>(studentService.findByFaculty(faculty), HttpStatus.OK);
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable UUID id, @RequestBody Student student) {
         String message = studentService.update(id, student);
