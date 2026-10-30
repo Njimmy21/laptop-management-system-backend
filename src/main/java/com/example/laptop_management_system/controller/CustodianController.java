@@ -42,12 +42,6 @@ public class CustodianController {
         return new ResponseEntity<>(custodian.get(), HttpStatus.OK);
     }
 
-    @GetMapping("/between")
-    public ResponseEntity<List<Loan>> findBetween(@RequestParam String start, @RequestParam String end) {
-        LocalDate startDate = LocalDate.parse(start);   // "2026-10-01" (text) → LocalDate object
-        LocalDate endDate = LocalDate.parse(end);
-        return new ResponseEntity<>(loanService.findBetween(startDate, endDate), HttpStatus.OK);
-    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable UUID id, @RequestBody Custodian custodian) {

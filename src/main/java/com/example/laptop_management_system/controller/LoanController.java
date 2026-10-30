@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,6 +46,14 @@ public class LoanController {
     public ResponseEntity<List<Loan>> findByStatus(@RequestParam LoanStatus status) {
         return new ResponseEntity<>(loanService.findByStatus(status), HttpStatus.OK);
     }
+
+    @GetMapping("/between")
+    public ResponseEntity<List<Loan>> findBetween(@RequestParam String start, @RequestParam String end) {
+        LocalDate startDate = LocalDate.parse(start);   // "2026-10-01" (text) → LocalDate object
+        LocalDate endDate = LocalDate.parse(end);
+        return new ResponseEntity<>(loanService.findBetween(startDate, endDate), HttpStatus.OK);
+    }
+    
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable UUID id, @RequestBody Loan loan) {
