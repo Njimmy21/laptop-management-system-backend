@@ -1,5 +1,11 @@
 package com.example.laptop_management_system.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.ManyToMany;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +24,10 @@ public class Brand {
 
     private String name;
 
+    @ManyToMany(mappedBy = "brands")
+    @JsonIgnore
+    private List<Custodian> custodians = new ArrayList<>();
+
     public Brand() {
     }
 
@@ -35,5 +45,13 @@ public class Brand {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Custodian> getCustodians() {
+        return custodians;
+    }
+
+    public void setCustodians(List<Custodian> custodians) {
+        this.custodians = custodians;
     }
 }
