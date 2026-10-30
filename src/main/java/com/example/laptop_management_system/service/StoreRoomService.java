@@ -49,4 +49,8 @@ public class StoreRoomService {
         storeRoomRepository.deleteById(id);
         return "Store room deleted successfully";
     }
+
+    public List<StoreRoom> findFreeStoreRooms() {
+        return storeRoomRepository.findFreeStoreRooms();
+    }
 }

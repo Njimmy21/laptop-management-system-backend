@@ -50,4 +50,8 @@ public class CustodianService {
         custodianRepository.deleteById(id);
         return "Custodian deleted successfully";
     }
+
+    public List<Custodian> searchByBrandName(String name) {
+        return custodianRepository.searchByBrandName(name);
+    }
 }

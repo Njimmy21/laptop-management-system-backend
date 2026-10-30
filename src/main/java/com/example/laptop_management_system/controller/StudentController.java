@@ -45,6 +45,15 @@ public class StudentController {
         return new ResponseEntity<>(studentService.findByFaculty(faculty), HttpStatus.OK);
     }
 
+    @GetMapping("/of-custodian/{custodianId}")
+    public ResponseEntity<?> findOfCustodian(@PathVariable UUID custodianId) {
+        Optional<List<Student>> students = studentService.findOfCustodian(custodianId);
+        if (students.isEmpty()) {
+            return new ResponseEntity<>("The custodian with that id does not exist", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(students.get(), HttpStatus.OK);
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable UUID id, @RequestBody Student student) {
         String message = studentService.update(id, student);

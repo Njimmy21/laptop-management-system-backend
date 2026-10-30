@@ -48,6 +48,11 @@ public class BrandController {
         return new ResponseEntity<>(brand.get(), HttpStatus.OK);
     }
 
+    @GetMapping("/unused")
+    public ResponseEntity<List<Brand>> findUnusedBrands() {
+        return new ResponseEntity<>(brandService.findUnusedBrands(), HttpStatus.OK);
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable UUID id, @RequestBody Brand brand) {
         String message = brandService.update(id, brand);

@@ -3,6 +3,7 @@ package com.example.laptop_management_system.service;
 import com.example.laptop_management_system.domain.Student;
 import com.example.laptop_management_system.repository.StudentRepository;
 import org.springframework.stereotype.Service;
+import com.example.laptop_management_system.repository.CustodianRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,9 +13,11 @@ import java.util.UUID;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final CustodianRepository custodianRepository;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, CustodianRepository custodianRepository) {
         this.studentRepository = studentRepository;
+        this.custodianRepository = custodianRepository;
     }
 
     public String save(Student student) {
@@ -55,5 +58,12 @@ public class StudentService {
 
     public List<Student> findByFaculty(String faculty) {
         return studentRepository.findByFacultyIgnoreCaseOrderByLastNameAsc(faculty);
+    }
+
+    public Optional<List<Student>> findOfCustodian(UUID custodianId) {
+        if (!custodianRepository.existsById(custodianId)) {
+            return Optional.empty();        // the custodian does not exist
+        }
+        return Optional.of(studentRepository.findStudentsOfCustodian(custodianId));
     }
 }

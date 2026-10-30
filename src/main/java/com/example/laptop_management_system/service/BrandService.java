@@ -48,4 +48,8 @@ public class BrandService {
         brandRepository.deleteById(id);
         return "Brand deleted successfully";
     }
+
+    public List<Brand> findUnusedBrands() {
+        return brandRepository.findUnusedBrands();
+    }
 }

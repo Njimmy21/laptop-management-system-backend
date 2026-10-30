@@ -48,6 +48,11 @@ public class StoreRoomController {
         return new ResponseEntity<>(storeRoom.get(), HttpStatus.OK);
     }
 
+    @GetMapping("/free")
+    public ResponseEntity<List<StoreRoom>> findFreeStoreRooms() {
+        return new ResponseEntity<>(storeRoomService.findFreeStoreRooms(), HttpStatus.OK);
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable UUID id, @RequestBody StoreRoom storeRoom) {
         String message = storeRoomService.update(id, storeRoom);

@@ -1,13 +1,11 @@
 package com.example.laptop_management_system.controller;
 
 import com.example.laptop_management_system.domain.Custodian;
-import com.example.laptop_management_system.domain.Loan;
 import com.example.laptop_management_system.service.CustodianService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,6 +38,11 @@ public class CustodianController {
             return new ResponseEntity<>("The custodian with that id does not exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(custodian.get(), HttpStatus.OK);
+    }
+
+    @GetMapping("/by-brand")
+    public ResponseEntity<List<Custodian>> searchByBrandName(@RequestParam String name) {
+        return new ResponseEntity<>(custodianService.searchByBrandName(name), HttpStatus.OK);
     }
 
 
