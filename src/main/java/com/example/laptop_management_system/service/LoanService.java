@@ -11,13 +11,17 @@ import com.example.laptop_management_system.domain.Loan;
 import com.example.laptop_management_system.domain.LoanStatus;
 import com.example.laptop_management_system.repository.LoanRepository;
 
+import com.example.laptop_management_system.repository.ConditionReportRepository;
+
 @Service
 public class LoanService {
 
     private final LoanRepository loanRepository;
+    private final ConditionReportRepository conditionReportRepository;
 
-    public LoanService(LoanRepository loanRepository) {
+    public LoanService(LoanRepository loanRepository, ConditionReportRepository conditionReportRepository) {
         this.loanRepository = loanRepository;
+        this.conditionReportRepository = conditionReportRepository;
     }
 
     public String save(Loan loan) {
@@ -56,8 +60,12 @@ public class LoanService {
     }
 
     public String delete(UUID id) {
-        if (!loanRepository.existsById(id)) {
+        Optional<Loan> loan = loanRepository.findById(id);
+        if (loan.isEmpty()) {
             return "The loan with that id does not exist";
+        }
+        if (conditionReportRepository.existsByLoan(loan.get())) {
+            return "That loan has condition reports, delete them first";
         }
         loanRepository.deleteById(id);
         return "Loan deleted successfully";
