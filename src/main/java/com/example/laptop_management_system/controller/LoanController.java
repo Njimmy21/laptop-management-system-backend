@@ -69,6 +69,11 @@ public class LoanController {
         LocalDate endDate = LocalDate.parse(end);
         return new ResponseEntity<>(loanService.findBetween(startDate, endDate), HttpStatus.OK);
     }
+
+    @GetMapping("/stats/by-status")
+    public ResponseEntity<List<Object[]>> countLoansByStatus() {
+        return new ResponseEntity<>(loanService.countLoansByStatus(), HttpStatus.OK);
+    }
     
 
     @PutMapping("/update/{id}")
@@ -102,5 +107,11 @@ public class LoanController {
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @PatchMapping("/cancel-day")
+    public ResponseEntity<String> cancelDay(@RequestParam UUID custodianId, @RequestParam String date) {
+        LocalDate day = LocalDate.parse(date);
+        return new ResponseEntity<>(loanService.cancelDay(custodianId, day), HttpStatus.OK);
     }
 }

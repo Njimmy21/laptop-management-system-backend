@@ -12,6 +12,7 @@ import com.example.laptop_management_system.domain.LoanStatus;
 import com.example.laptop_management_system.repository.LoanRepository;
 
 import com.example.laptop_management_system.repository.ConditionReportRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LoanService {
@@ -100,5 +101,15 @@ public class LoanService {
         loan.setStatus(newStatus);
         loanRepository.save(loan);
         return "Loan status updated successfully";
+    }
+
+    public List<Object[]> countLoansByStatus() {
+        return loanRepository.countLoansByStatus();
+    }
+
+    @Transactional
+    public String cancelDay(UUID custodianId, LocalDate date) {
+        int count = loanRepository.cancelLoansOfDay(custodianId, date, LoanStatus.REFUSED, LoanStatus.RETURNED);
+        return count + " loans cancelled";
     }
 }
