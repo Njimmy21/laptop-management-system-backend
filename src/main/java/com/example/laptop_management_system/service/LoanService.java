@@ -1,14 +1,15 @@
 package com.example.laptop_management_system.service;
 
-import com.example.laptop_management_system.domain.Loan;
-import com.example.laptop_management_system.domain.LoanStatus;
-import com.example.laptop_management_system.repository.LoanRepository;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
+import com.example.laptop_management_system.domain.Loan;
+import com.example.laptop_management_system.domain.LoanStatus;
+import com.example.laptop_management_system.repository.LoanRepository;
 
 @Service
 public class LoanService {
@@ -20,6 +21,15 @@ public class LoanService {
     }
 
     public String save(Loan loan) {
+        if (loan.getLoanDate().isBefore(LocalDate.now())) {
+            return "Loan date cannot be in the past";
+        }
+        boolean busy = loanRepository.existsByCustodianIdAndLoanDateAndStatusNot(
+                loan.getCustodian().getId(), loan.getLoanDate(), LoanStatus.REFUSED);
+        if (busy) {
+            return "Custodian already has a loan on that date";
+        }
+        loan.setStatus(LoanStatus.REQUESTED);
         loanRepository.save(loan);
         return "Loan saved successfully";
     }
@@ -59,5 +69,28 @@ public class LoanService {
 
     public List<Loan> findBetween(LocalDate start, LocalDate end) {
         return loanRepository.findByLoanDateBetweenOrderByLoanDateAsc(start, end);
+    }
+
+    public String updateStatus(UUID id, LoanStatus newStatus) {
+        Optional<Loan> existing = loanRepository.findById(id);
+        if (existing.isEmpty()) {
+            return "The loan with that id does not exist";
+        }
+        Loan loan = existing.get();
+        LoanStatus current = loan.getStatus();
+
+        boolean allowed = false;
+        if (current == LoanStatus.REQUESTED) {
+            allowed = newStatus == LoanStatus.ISSUED || newStatus == LoanStatus.REFUSED;
+        } else if (current == LoanStatus.ISSUED) {
+            allowed = newStatus == LoanStatus.RETURNED || newStatus == LoanStatus.REFUSED;
+        }
+
+        if (!allowed) {
+            return "Cannot change status from " + current + " to " + newStatus;
+        }
+        loan.setStatus(newStatus);
+        loanRepository.save(loan);
+        return "Loan status updated successfully";
     }
 }
