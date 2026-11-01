@@ -23,7 +23,7 @@
             "all"
           ]
         },
-        "description": "CRUD for the five entities. Pattern per entity: POST /api/{path}/save (201), GET /all, GET /{id} (404 if unknown), PUT /update/{id}, DELETE /delete/{id}. Paths: brands, store-rooms, custodians, students, loans. Failing case: GET /api/brands/11111111-1111-1111-1111-111111111111 -> 404 'The brand with that id does not exist'."
+        "description": "CRUD for the five entities. Pattern per entity: POST /api/{path}/save (201), GET /all, GET /{id} (404 if unknown), PUT /update/{id}, DELETE /delete/{id}. Paths: brands, store-rooms, custodians, students, loans. Failing case: GET /api/brands/11111111-1111-1111-1111-111111111111 -> 404 'The brand with that id does not exist'. Deleting a row that other rows still use returns 409 with a message, for example 'Cannot delete: that student has loans'."
       }
     },
     {
@@ -452,6 +452,62 @@
           ]
         },
         "description": "JPQL UPDATE with @Modifying and @Transactional. RETURNED loans are skipped -> 200 '0 loans cancelled'. With a REQUESTED loan on that custodian and date -> '1 loans cancelled'. Missing date -> 400."
+      }
+    },
+    {
+      "name": "Bonus-dashboard",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/dashboard/summary",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "dashboard",
+            "summary"
+          ]
+        },
+        "description": "Bonus +5. Returns a Map<String, Long> built with LinkedHashMap: students, custodians, freeStoreRooms (reuses C2), loansToday, requested, conditionReports."
+      }
+    },
+    {
+      "name": "Bonus-page",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/loans/page?page=0&size=5&sort=loanDate,desc",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "loans",
+            "page"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "5"
+            },
+            {
+              "key": "sort",
+              "value": "loanDate,desc"
+            }
+          ]
+        },
+        "description": "Bonus +5. Returns a Page<Loan> built from a Pageable; the response shows totalPages and totalElements."
       }
     }
   ]

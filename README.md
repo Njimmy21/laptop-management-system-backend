@@ -37,3 +37,8 @@ Brand, StoreRoom, Custodian, Student, Loan, ConditionReport, and the enum LoanSt
 | Business rules (D) | `POST /api/loans/save`, `PATCH /api/loans/{id}/status`, `PUT /api/custodians/{custodianId}/brands/{brandId}`, `PATCH /api/custodians/{custodianId}/store-room` |
 | Condition reports (E) | `POST /api/condition-reports/save?loanId=`, `GET /api/condition-reports/student/{studentNumber}`, `DELETE /api/condition-reports/delete/{id}` |
 | Reports and bulk update (F) | `GET /api/loans/stats/by-status`, `PATCH /api/loans/cancel-day` |
+| Bonus | `GET /api/dashboard/summary`, `GET /api/loans/page?page=0&size=5&sort=loanDate,desc` |
+
+## Notes
+
+A row that other rows still reference cannot be deleted. The API returns 409 with a message such as `Cannot delete: that student has loans`.
