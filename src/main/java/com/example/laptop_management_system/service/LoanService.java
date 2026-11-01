@@ -6,7 +6,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.example.laptop_management_system.domain.Loan;
 import com.example.laptop_management_system.domain.LoanStatus;
 import com.example.laptop_management_system.repository.LoanRepository;
@@ -111,5 +112,9 @@ public class LoanService {
     public String cancelDay(UUID custodianId, LocalDate date) {
         int count = loanRepository.cancelLoansOfDay(custodianId, date, LoanStatus.REFUSED, LoanStatus.RETURNED);
         return count + " loans cancelled";
+    }
+
+    public Page<Loan> findPage(Pageable pageable) {
+        return loanRepository.findAll(pageable);
     }
 }

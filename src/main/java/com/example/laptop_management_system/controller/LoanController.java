@@ -21,6 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.laptop_management_system.domain.Loan;
 import com.example.laptop_management_system.domain.LoanStatus;
 import com.example.laptop_management_system.service.LoanService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @RestController
 @RequestMapping("/api/loans")
@@ -73,6 +77,17 @@ public class LoanController {
     @GetMapping("/stats/by-status")
     public ResponseEntity<List<Object[]>> countLoansByStatus() {
         return new ResponseEntity<>(loanService.countLoansByStatus(), HttpStatus.OK);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<Loan>> findPage(@RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "5") int size,
+                                            @RequestParam(defaultValue = "loanDate,desc") String sort) {
+        String[] parts = sort.split(",");
+        Sort.Direction direction = (parts.length > 1 && parts[1].equalsIgnoreCase("desc"))
+                ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, parts[0]));
+        return new ResponseEntity<>(loanService.findPage(pageable), HttpStatus.OK);
     }
     
 

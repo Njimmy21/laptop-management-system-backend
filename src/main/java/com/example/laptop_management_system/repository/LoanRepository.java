@@ -28,4 +28,6 @@ public interface LoanRepository extends JpaRepository<Loan, UUID> {
                         @Param("returned") LoanStatus returned);
     boolean existsByCustodianId(UUID custodianId);
     boolean existsByStudentId(UUID studentId);
+    long countByLoanDate(LocalDate loanDate);
+    long countByStatus(LoanStatus status);
 }
