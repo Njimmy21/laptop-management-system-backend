@@ -3,7 +3,7 @@ package com.example.laptop_management_system.service;
 import com.example.laptop_management_system.domain.Brand;
 import com.example.laptop_management_system.repository.BrandRepository;
 import org.springframework.stereotype.Service;
-
+import com.example.laptop_management_system.repository.CustodianRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,9 +12,11 @@ import java.util.UUID;
 public class BrandService {
 
     private final BrandRepository brandRepository;
+    private final CustodianRepository custodianRepository;
 
-    public BrandService(BrandRepository brandRepository) {
+    public BrandService(BrandRepository brandRepository, CustodianRepository custodianRepository) {
         this.brandRepository = brandRepository;
+        this.custodianRepository = custodianRepository;
     }
 
     public String save(Brand brand) {
@@ -44,6 +46,9 @@ public class BrandService {
     public String delete(UUID id) {
         if (!brandRepository.existsById(id)) {
             return "The brand with that id does not exist";
+        }
+        if (custodianRepository.existsByBrandsId(id)) {
+            return "Cannot delete: a custodian holds that brand";
         }
         brandRepository.deleteById(id);
         return "Brand deleted successfully";

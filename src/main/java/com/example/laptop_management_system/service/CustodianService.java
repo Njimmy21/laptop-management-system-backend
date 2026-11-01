@@ -12,20 +12,23 @@ import com.example.laptop_management_system.domain.StoreRoom;
 import com.example.laptop_management_system.repository.BrandRepository;
 import com.example.laptop_management_system.repository.CustodianRepository;
 import com.example.laptop_management_system.repository.StoreRoomRepository;
-
+import com.example.laptop_management_system.repository.LoanRepository;
 @Service
 public class CustodianService {
 
     private final CustodianRepository custodianRepository;
     private final BrandRepository brandRepository;
     private final StoreRoomRepository storeRoomRepository;
+    private final LoanRepository loanRepository;
 
     public CustodianService(CustodianRepository custodianRepository,
                             BrandRepository brandRepository,
-                            StoreRoomRepository storeRoomRepository) {
+                            StoreRoomRepository storeRoomRepository,
+                        LoanRepository loanRepository) {
         this.custodianRepository = custodianRepository;
         this.brandRepository = brandRepository;
         this.storeRoomRepository = storeRoomRepository;
+        this.loanRepository = loanRepository;
     }
 
     public String save(Custodian custodian) {
@@ -57,6 +60,9 @@ public class CustodianService {
     public String delete(UUID id) {
         if (!custodianRepository.existsById(id)) {
             return "The custodian with that id does not exist";
+        }
+        if (loanRepository.existsByCustodianId(id)) {
+            return "Cannot delete: that custodian has loans";
         }
         custodianRepository.deleteById(id);
         return "Custodian deleted successfully";

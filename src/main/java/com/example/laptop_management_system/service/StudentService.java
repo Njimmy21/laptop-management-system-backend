@@ -4,6 +4,7 @@ import com.example.laptop_management_system.domain.Student;
 import com.example.laptop_management_system.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 import com.example.laptop_management_system.repository.CustodianRepository;
+import com.example.laptop_management_system.repository.LoanRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +15,12 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final CustodianRepository custodianRepository;
+    private final LoanRepository loanRepository;
 
-    public StudentService(StudentRepository studentRepository, CustodianRepository custodianRepository) {
+    public StudentService(StudentRepository studentRepository, CustodianRepository custodianRepository,LoanRepository loanRepository) {
         this.studentRepository = studentRepository;
         this.custodianRepository = custodianRepository;
+        this.loanRepository = loanRepository;
     }
 
     public String save(Student student) {
@@ -51,6 +54,9 @@ public class StudentService {
     public String delete(UUID id) {
         if (!studentRepository.existsById(id)) {
             return "The student with that id does not exist";
+        }
+        if (loanRepository.existsByStudentId(id)) {
+            return "Cannot delete: that student has loans";
         }
         studentRepository.deleteById(id);
         return "Student deleted successfully";

@@ -3,6 +3,7 @@ package com.example.laptop_management_system.service;
 import com.example.laptop_management_system.domain.StoreRoom;
 import com.example.laptop_management_system.repository.StoreRoomRepository;
 import org.springframework.stereotype.Service;
+import com.example.laptop_management_system.repository.CustodianRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,9 +13,11 @@ import java.util.UUID;
 public class StoreRoomService {
 
     private final StoreRoomRepository storeRoomRepository;
+    private final CustodianRepository custodianRepository;
 
-    public StoreRoomService(StoreRoomRepository storeRoomRepository) {
+    public StoreRoomService(StoreRoomRepository storeRoomRepository , CustodianRepository custodianRepository) {
         this.storeRoomRepository = storeRoomRepository;
+        this.custodianRepository = custodianRepository;
     }
 
     public String save(StoreRoom storeRoom) {
@@ -45,6 +48,9 @@ public class StoreRoomService {
     public String delete(UUID id) {
         if (!storeRoomRepository.existsById(id)) {
             return "The store room with that id does not exist";
+        }
+        if (custodianRepository.existsByStoreRoomId(id)) {
+            return "Cannot delete: a custodian is assigned to that store room";
         }
         storeRoomRepository.deleteById(id);
         return "Store room deleted successfully";
